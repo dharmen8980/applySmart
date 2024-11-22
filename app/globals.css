@@ -2,26 +2,114 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  color: var(--foreground);
-  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.content-container {
+  @apply w-full mx-auto font-sans
+             sm:max-w-[640px] 
+             md:max-w-[768px] 
+             lg:max-w-[1024px] 
+             xl:max-w-[1280px] 
+             2xl:max-w-[1536px];
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+@layer base {
+  :root {
+    /* Backgrounds */
+    --background: 0, 0%, 100%; /* White background */
+    --background-alt: 0, 0%, 98%; /* Slightly off-white for contrast */
+    --foreground: 0, 0%, 0%; /* Black text */
+
+    /* Card Components */
+    --card: 0, 0%, 100%; /* Same as background */
+    --card-foreground: 0, 0%, 0%; /* Black text on cards */
+
+    /* Popover Components */
+    --popover: 0, 0%, 100%; /* Same as background */
+    --popover-foreground: 0, 0%, 0%; /* Black text on popovers */
+
+    /* Primary Colors */
+    --primary: 200, 47%, 45%; /* Original primary color */
+    --primary-dark: 204, 47%, 35%; /* Darker shade for hover/active states */
+    --primary-foreground: 0, 0%, 100%; /* White text on primary background */
+
+    /* Secondary Colors */
+    --secondary: 205, 53%, 55%; /* Original secondary color */
+    --secondary-foreground: 0, 0%, 100%; /* White text on secondary background */
+
+    /* Muted Colors */
+    --muted: 0, 0%, 95%; /* Light gray for muted backgrounds */
+    --muted-foreground: 0, 0%, 20%; /* Dark gray text on muted backgrounds */
+
+    /* Accent Colors */
+    --accent: 198, 48%, 64%; /* Original accent color */
+    --accent-foreground: 0, 0%, 0%; /* Black text on accent background */
+
+    /* Destructive Colors */
+    --destructive: 0, 70%, 50%; /* Bright red for destructive actions */
+    --destructive-foreground: 0, 0%, 100%; /* White text on destructive background */
+
+    /* Borders and Inputs */
+    --border: 0, 0%, 80%; /* Light gray borders */
+    --input: 0, 0%, 100%; /* Input fields matching background */
+
+    /* Rings */
+    --ring: 0, 0%, 30%; /* Dark ring for focus indicators */
+
+    /* Chart Colors */
+    --chart-1: 220, 70%, 50%; /* Blue */
+    --chart-2: 160, 60%, 45%; /* Green */
+    --chart-3: 30, 80%, 55%; /* Orange */
+    --chart-4: 280, 65%, 60%; /* Purple */
+    --chart-5: 340, 75%, 55%; /* Pink */
+  }
+
+  .dark {
+    /* Backgrounds */
+    --background: 0, 0%, 10%; /* Very dark gray */
+    --background-alt: 0, 0%, 15%; /* Slightly lighter background */
+    --foreground: 0, 0%, 90%; /* Light gray for text */
+
+    /* Primary Colors */
+    --primary: 200, 70%, 65%; /* Lighter and more saturated */
+    --primary-foreground: 0, 0%, 10%; /* Dark text on light primary background */
+
+    /* Secondary Colors */
+    --secondary: 205, 70%, 75%; /* Lighter secondary color */
+    --secondary-foreground: 0, 0%, 10%; /* Dark text on light secondary background */
+
+    /* Accent Colors */
+    --accent: 198, 70%, 80%; /* Lighter accent color */
+    --accent-foreground: 0, 0%, 10%; /* Dark text on light accent background */
+
+    /* Muted Colors */
+    --muted: 0, 0%, 20%; /* Dark muted background */
+    --muted-foreground: 0, 0%, 70%; /* Light text on muted background */
+
+    /* Destructive Colors */
+    --destructive: 0, 70%, 60%; /* Vibrant red for destructive actions */
+    --destructive-foreground: 0, 0%, 10%; /* Dark text on destructive background */
+
+    /* Borders and Inputs */
+    --border: 0, 0%, 25%; /* Slightly lighter than background */
+    --input: 0, 0%, 25%; /* Input backgrounds */
+
+    /* Rings */
+    --ring: 0, 0%, 70%; /* Light ring for focus states */
+
+    /* Chart Colors */
+    --chart-1: 220, 70%, 65%; /* Adjusted chart colors */
+    --chart-2: 160, 70%, 60%;
+    --chart-3: 30, 80%, 65%;
+    --chart-4: 280, 70%, 70%;
+    --chart-5: 340, 75%, 65%;
   }
 }
