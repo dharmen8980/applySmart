@@ -2,19 +2,19 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#e6e6e6]">
-      <div className="container mx-auto px-4 py-8">
+    <footer className="bg-primary">
+      <div className="px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-lg font-semibold mb-2 text-[#2f6783]">About applySmart</h3>
-            <p className="text-sm text-[#569ec2]">
+            <h3 className="text-lg font-semibold mb-2 text-[#ffffff]">About applySmart</h3>
+            <p className="text-sm text-[#e6e6e6]">
               applySmart is your all-in-one solution for managing applications to universities and companies. Stay organized and
               never miss an opportunity.
             </p>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-2 text-[#2f6783]">Quick Links</h3>
-            <ul className="text-sm text-[#569ec2] space-y-1">
+            <h3 className="text-lg font-semibold mb-2 text-[#e6e6e6]">Quick Links</h3>
+            <ul className="text-sm text-[#e6e6e6] space-y-1">
               <li>
                 <Link href="/about" className="hover:text-[#3d84a8]">
                   About Us
@@ -38,10 +38,10 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-2 text-[#2f6783]">Connect With Us</h3>
-            <p className="text-sm text-[#569ec2] mb-2">Stay updated with our latest news and offers.</p>
+            <h3 className="text-lg font-semibold mb-2 text-[#e6e6e6]">Connect With Us</h3>
+            <p className="text-sm text-[#e6e6e6] mb-2">Stay updated with our latest news and offers.</p>
             <div className="flex space-x-4">
-              <a href="#" className="text-[#3d84a8] hover:text-[#2f6783]">
+              <a href="#" className="text-[#e6e6e6] hover:text-[#2f6783]">
                 <span className="sr-only">Facebook</span>
                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path
@@ -51,13 +51,13 @@ export default function Footer() {
                   />
                 </svg>
               </a>
-              <a href="#" className="text-[#3d84a8] hover:text-[#2f6783]">
+              <a href="#" className="text-[#e6e6e6] hover:text-[#2f6783]">
                 <span className="sr-only">Twitter</span>
                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
                 </svg>
               </a>
-              <a href="#" className="text-[#3d84a8] hover:text-[#2f6783]">
+              <a href="#" className="text-[#e6e6e6] hover:text-[#2f6783]">
                 <span className="sr-only">GitHub</span>
                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path
@@ -70,7 +70,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-8 border-t border-[#7cb3cf] pt-8 text-center text-sm text-[#569ec2]">
+        <div className="mt-8 border-t border-[#e6e6e6] pt-8 text-center text-sm text-[#e6e6e6]">
           © 2023 applySmart. All rights reserved.
         </div>
       </div>
