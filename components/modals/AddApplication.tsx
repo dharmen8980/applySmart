@@ -122,11 +122,12 @@ export default function AddApplicationDialog() {
                 <SelectValue placeholder="Select application status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="applied">Applied</SelectItem>
-                <SelectItem value="interviewing">Interviewing</SelectItem>
-                <SelectItem value="offered">Offered</SelectItem>
-                <SelectItem value="rejected">Rejected</SelectItem>
-                <SelectItem value="accepted">Accepted</SelectItem>
+                <SelectItem value="Applied">Applied</SelectItem>
+                <SelectItem value="In Progress">In Progress</SelectItem>
+                <SelectItem value="Interviewing">Interviewing</SelectItem>
+                <SelectItem value="Offered">Offered</SelectItem>
+                <SelectItem value="Rejected">Rejected</SelectItem>
+                <SelectItem value="Accepted">Accepted</SelectItem>
               </SelectContent>
             </Select>
           </div>
