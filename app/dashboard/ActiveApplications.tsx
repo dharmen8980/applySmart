@@ -36,9 +36,11 @@ export default function ActiveApplications() {
         setIsLoading(false);
       }
     };
+
     if (session) {
       fetchApplications();
     }
+
   }, [session]);
 
   if (isLoading) {
