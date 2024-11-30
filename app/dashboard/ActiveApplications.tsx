@@ -25,7 +25,7 @@ export default function ActiveApplications() {
     const fetchApplications = async () => {
       try {
         if (!session?.user?.email) throw new Error("User email is missing.");
-        const res = await fetch(`/api/database/activeApplications?email=${session?.user?.email}`);
+        const res = await fetch(`/api/applications/active`);
         if (!res.ok) throw new Error("Failed to fetch applications");
         const data = await res.json();
         setApplications(Array.isArray(data) ? data : []);

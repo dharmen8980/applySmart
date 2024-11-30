@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     const email = session?.user?.email;
     
     const statusFilter = request.nextUrl.searchParams.get("statusFilter");
-    const applicationFilter = request.nextUrl.searchParams.get("applicationFilter");
+    const searchQuery = request.nextUrl.searchParams.get("searchQuery");
 
     let sql = "SELECT * FROM Applications";
     let params: string[] = [];
@@ -26,9 +26,9 @@ export async function GET(request: NextRequest) {
     }
 
     // filter applications by search query, if applicable
-    if (applicationFilter) {
+    if (searchQuery) {
       sql += ` AND (institution_name LIKE ? OR location LIKE ? OR role_program LIKE ? OR hr_email LIKE ? OR application_link LIKE ? OR notes LIKE ?)`;
-      params.push(`%${applicationFilter}%`, `%${applicationFilter}%`, `%${applicationFilter}%`, `%${applicationFilter}%`, `%${applicationFilter}%`, `%${applicationFilter}%`);
+      params.push(`%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`);
     }
 
     const rows = (await query(sql, params)) as RowDataPacket[];
