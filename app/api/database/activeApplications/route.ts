@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ message: "No applications found" }, { status: 200 });
     }
 
-    return NextResponse.json(session);
+    return NextResponse.json(rows);
   } catch (error) {
     console.error("Error fetching applications:", error);
     if (error instanceof AuthenticationError) {
