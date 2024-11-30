@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { verifySession } from "@/lib/verifySession";
 
 export async function GET(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams;
-    const email = searchParams.get("email");
+    const session = await verifySession();
+    const email = session?.user?.email;
 
     let sql = "SELECT status, count(*) as count FROM Applications";
     let params: string[] = [];

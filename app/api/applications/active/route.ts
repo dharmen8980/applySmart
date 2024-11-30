@@ -6,15 +6,29 @@ import { AuthenticationError, verifySession } from "@/lib/verifySession";
 export async function GET(request: NextRequest) {
   try {
     const session = await verifySession();
-    const searchParams = request.nextUrl.searchParams;
-    const email = searchParams.get("email");
+    const email = session?.user?.email;
+    
+    const statusFilter = request.nextUrl.searchParams.get("statusFilter");
+    const applicationFilter = request.nextUrl.searchParams.get("applicationFilter");
 
-    let sql = "SELECT * FROM Active_Applications";
+    let sql = "SELECT * FROM Applications";
     let params: string[] = [];
 
     if (email) {
       sql += " WHERE email = ?";
       params.push(email);
+    }
+    
+    // filter applications by status, if applicable
+    if (statusFilter) {
+      sql += " AND status = ?";
+      params.push(statusFilter);
+    }
+
+    // filter applications by search query, if applicable
+    if (applicationFilter) {
+      sql += ` AND (institution_name LIKE ? OR location LIKE ? OR role_program LIKE ? OR hr_email LIKE ? OR application_link LIKE ? OR notes LIKE ?)`;
+      params.push(`%${applicationFilter}%`, `%${applicationFilter}%`, `%${applicationFilter}%`, `%${applicationFilter}%`, `%${applicationFilter}%`, `%${applicationFilter}%`);
     }
 
     const rows = (await query(sql, params)) as RowDataPacket[];
