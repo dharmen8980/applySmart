@@ -8,14 +8,13 @@ export async function GET(request: NextRequest) {
     const session = await verifySession();
     const email = session?.user?.email;
 
-    let sql = "SELECT status, count(*) as count FROM Applications";
-    let params: string[] = [];
-
-    if (email) {
-      sql += " WHERE email = ?";
-      sql += " GROUP BY status";
-      params.push(email);
+    // If the email is missing, respond with an error
+    if (!email) {
+      return NextResponse.json({ error: "User email not found in session" }, { status: 401 });
     }
+
+    let sql = "SELECT status, count(*) as count FROM Applications WHERE email = ? GROUP BY status";
+    let params: string[] = [email];
 
     const rows = (await query(sql, params)) as RowDataPacket[];
 
