@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import ActiveApplicationCard from "@/components/ActiveApplicationCard";
-import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useSession } from "next-auth/react";
 import AddApplication from "@/components/modals/AddApplication";
@@ -41,7 +40,6 @@ export default function ActiveApplications() {
     if (session) {
       fetchApplications();
     }
-
   }, [session]);
 
   if (isLoading) {
