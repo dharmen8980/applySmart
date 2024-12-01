@@ -59,7 +59,7 @@ export default function AddApplicationDialog() {
     };
 
     try {
-      const response = await fetch("/api/database/activeApplications", {
+      const response = await fetch("/api/applications", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -12,13 +12,14 @@ interface ApplicationGroup {
 export default function ActiveApplicationSummary() {
   const [allApplications, setAllApplications] = useState<ApplicationGroup[]>([]);
   const { data: session } = useSession();
+  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => { 
     console.log("Fetching applications");
     const fetchApplications = async () => {
       try {
         if (!session?.user?.email) return;
-        const res = await fetch(`/api/database/activeApplicationSummary?email=${session?.user?.email}`);
+        const res = await fetch(`/api/applications/summary`);
         if (!res.ok) throw new Error("Failed to fetch applications");
         const data = await res.json();
         setAllApplications(Array.isArray(data) ? data : []);
@@ -77,7 +78,3 @@ export default function ActiveApplicationSummary() {
     </Card>
   );
 }
-function setError(arg0: string) {
-  throw new Error("Function not implemented.");
-}
-
