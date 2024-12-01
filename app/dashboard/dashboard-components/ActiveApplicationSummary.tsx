@@ -12,6 +12,7 @@ interface ApplicationGroup {
 export default function ActiveApplicationSummary() {
   const [allApplications, setAllApplications] = useState<ApplicationGroup[]>([]);
   const { data: session } = useSession();
+  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => { 
     console.log("Fetching applications");
@@ -77,7 +78,3 @@ export default function ActiveApplicationSummary() {
     </Card>
   );
 }
-function setError(arg0: string) {
-  throw new Error("Function not implemented.");
-}
-

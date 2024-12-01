@@ -19,7 +19,7 @@ export default function AddApplicationDialog() {
   const { data: session } = useSession();
   const [date, setDate] = useState<Date>();
   const [formData, setFormData] = useState({
-    company_university: "",
+    institution_name: "",
     location: "",
     role_program: "",
     hr_email: "",
@@ -44,7 +44,7 @@ export default function AddApplicationDialog() {
     };
 
     try {
-      const response = await fetch("/api/database/activeApplications", {
+      const response = await fetch("/api/applications", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -79,11 +79,11 @@ export default function AddApplicationDialog() {
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="space-y-2">
-            <Label htmlFor="company_university">Company/University</Label>
+            <Label htmlFor="institution_name">Company/University</Label>
             <Input
-              id="company_university"
-              name="company_university"
-              value={formData.company_university}
+              id="institution_name"
+              name="institution_name"
+              value={formData.institution_name}
               onChange={handleChange}
               placeholder="Enter company or university name"
               className="placeholder:text-xs placeholder:text-gray-400"

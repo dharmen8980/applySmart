@@ -48,52 +48,53 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  try {
-    const session = await verifySession();
-    const { email, company_university, location, role_program, hr_email, application_link, next_event_date, status, notes } =
-      await request.json();
-
-    if (!email || !company_university || !location || !role_program) {
-      return NextResponse.json({ error: "Please provide all required fields" }, { status: 400 });
+    try {
+      const session = await verifySession();
+      const { email, institution_name, location, role_program, hr_email, application_link, next_event_date, status, notes } =
+        await request.json();
+  
+      if (!email || !institution_name || !location || !role_program) {
+        return NextResponse.json({ error: "Please provide all required fields" }, { status: 400 });
+      }
+  
+      const currentDate = new Date().toISOString().slice(0, 19).replace("T", " ");
+  
+      const result = (await query(
+        `INSERT INTO Applications (
+          email, 
+          institution_name, 
+          location, 
+          role_program, 
+          hr_email, 
+          application_link, 
+          next_event_date, 
+          status, 
+          notes, 
+          created_at, 
+          updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          email,
+          institution_name,
+          location,
+          role_program,
+          hr_email,
+          application_link,
+          next_event_date,
+          status,
+          notes,
+          currentDate,
+          currentDate,
+        ]
+      )) as ResultSetHeader;
+  
+      return NextResponse.json({ message: "Application added successfully", result }, { status: 201 });
+    } catch (error) {
+      console.error("Error adding application:", error);
+      if (error instanceof AuthenticationError) {
+        return NextResponse.json({ error: error.message }, { status: error.status });
+      }
+      return NextResponse.json({ error: `${error}` }, { status: 500 });
     }
-
-    const currentDate = new Date().toISOString().slice(0, 19).replace("T", " ");
-
-    const result = (await query(
-      `INSERT INTO Applications (
-        email, 
-        company_university, 
-        location, 
-        role_program, 
-        hr_email, 
-        application_link, 
-        next_event_date, 
-        status, 
-        notes, 
-        created_at, 
-        updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        email,
-        company_university,
-        location,
-        role_program,
-        hr_email,
-        application_link,
-        next_event_date,
-        status,
-        notes,
-        currentDate,
-        currentDate,
-      ]
-    )) as ResultSetHeader;
-
-    return NextResponse.json({ message: "Application added successfully", result }, { status: 201 });
-  } catch (error) {
-    console.error("Error adding application:", error);
-    if (error instanceof AuthenticationError) {
-      return NextResponse.json({ error: error.message }, { status: error.status });
-    }
-    return NextResponse.json({ error: `${error}` }, { status: 500 });
   }
-}
+  

@@ -6,9 +6,10 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useSession } from "next-auth/react";
 import AddApplication from "@/components/modals/AddApplication";
 
-interface ApplicationData {
+export interface ApplicationData {
+  application_id: number;
   email: string;
-  company_university: string;
+  institution_name: string;
   location: string;
   role_program: string;
   status: string;
@@ -25,7 +26,7 @@ export default function ActiveApplications() {
     const fetchApplications = async () => {
       try {
         if (!session?.user?.email) throw new Error("User email is missing.");
-        const res = await fetch(`/api/applications/active`);
+        const res = await fetch(`/api/applications`);
         if (!res.ok) throw new Error("Failed to fetch applications");
         const data = await res.json();
         setApplications(Array.isArray(data) ? data : []);
@@ -60,7 +61,7 @@ export default function ActiveApplications() {
           applications.map((application, index) => (
             <ActiveApplicationCard
               key={`${application.email}-${index}`}
-              name={application.company_university}
+              name={application.institution_name}
               location={application.location}
               role={application.role_program}
               status={application.status}
