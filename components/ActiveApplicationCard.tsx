@@ -1,4 +1,4 @@
-import { Calendar, MapPin } from "lucide-react";
+import { Calendar, Edit, Link, MapPin } from "lucide-react";
 import React from "react";
 
 interface ActiveApplicationParams {
@@ -12,16 +12,22 @@ interface ActiveApplicationParams {
 const ActiveApplicationCard: React.FC<ActiveApplicationParams> = ({ name, location, role, status, event }) => {
   return (
     <div className="bg-white shadow overflow-hidden border border-gray-200 rounded-xl">
-      <div className="px-4 py-4 sm:px-6">
+      <div className="px-4 py-4">
         <div className="flex items-center justify-between">
-          <div>
+          <div className="flex flex-col">
             <p className="text-sm font-medium text-[#3d84a8] truncate">{name}</p>
             <p className="text-xs text-gray-500 mt-1">{role}</p>
           </div>
-          <div className="ml-2 flex-shrink-0 flex items-center">
-            <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 mr-2">
-              {status}
-            </p>
+          <div className="flex flex-col items-end">
+            <div className="flex items-center">
+              <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 mr-2">
+                {status}
+              </p>
+              <p className="flex items-center text-gray-400 cursor-pointer">
+                <Edit className="h-4" />
+              </p>
+            </div>
+            <p className="flex justify-end items-center text-xs text-gray-500 mt-1 cursor-pointer">Application Link</p>
           </div>
         </div>
         <div className="mt-1 flex  md:block lg:flex lg:justify-between space-y-2 justify-between items-center">

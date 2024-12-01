@@ -50,13 +50,13 @@ export default function AddApplicationDialog() {
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const handleSubmit = async () => {
     // Prepare data to send
     const dataToSend: ActiveApplication = {
       ...formData,
     };
+
+    console.log(dataToSend);
 
     try {
       const response = await fetch("/api/applications", {
@@ -113,7 +113,7 @@ export default function AddApplicationDialog() {
               : "Enter the remaining details and submit your application."}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4">
           {currentStep === 1 && (
             <>
               {/* Application Type */}
@@ -241,13 +241,7 @@ export default function AddApplicationDialog() {
                 <ArrowRight className="h-4 w-4" />
               </Button>
             )}
-            {currentStep === 2 && (
-              <DialogClose asChild>
-                <Button type="submit" className="flex items-center gap-2">
-                  Submit Application
-                </Button>
-              </DialogClose>
-            )}
+            {currentStep === 2 && <DialogClose onClick={handleSubmit}>Submit Application</DialogClose>}
           </div>
         </form>
       </DialogContent>
