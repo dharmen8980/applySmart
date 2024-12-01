@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
     try {
       const session = await verifySession();
-      const { email, institution_name, location, role_program, hr_email, application_link, next_event_date, status, notes } =
+      const { email, application_type, institution_name, location, role_program, hr_email, application_link, next_event_date, status, notes } =
         await request.json();
   
       if (!email || !institution_name || !location || !role_program) {
@@ -62,6 +62,7 @@ export async function POST(request: NextRequest) {
       const result = (await query(
         `INSERT INTO Applications (
           email, 
+          application_type,
           institution_name, 
           location, 
           role_program, 
@@ -72,9 +73,10 @@ export async function POST(request: NextRequest) {
           notes, 
           created_at, 
           updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           email,
+          application_type,
           institution_name,
           location,
           role_program,
