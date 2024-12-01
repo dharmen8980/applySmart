@@ -27,7 +27,10 @@ export function AddActiveApplicationForm() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Application</DialogTitle>
+          <DialogTitle>
+            <Plus className="h-4" />
+            Add New
+          </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 broder border-gray-500">
           <div className="space-y-2">
