@@ -1,5 +1,8 @@
-import { Calendar, Edit, Link, MapPin } from "lucide-react";
+import { Expand } from "lucide-react";
 import React from "react";
+import { Badge } from "./ui/badge";
+import { STATUS } from "@/app/types/enum/page";
+import { cn } from "@/lib/utils";
 
 interface ActiveApplicationParams {
   name: string;
@@ -9,7 +12,21 @@ interface ActiveApplicationParams {
   event: string;
 }
 
-const ActiveApplicationCard: React.FC<ActiveApplicationParams> = ({ name, location, role, status, event }) => {
+const ActiveApplicationCard: React.FC<ActiveApplicationParams> = ({ name, role, status }) => {
+  const getStatusStyles = (status: string) => {
+    switch (status) {
+      case STATUS.APPLIED:
+        return "bg-slate-100 text-slate-800 hover:bg-slate-100";
+      case STATUS.INPROGRESS:
+        return "bg-yellow-100 text-yellow-800 hover:bg-yellow-100";
+      case STATUS.ACCEPTED:
+        return "bg-green-100 text-green-800 hover:bg-green-100";
+      case STATUS.REJECTED:
+        return "bg-red-100 text-red-800 hover:bg-red-100";
+      default:
+        return "bg-gray-100 text-gray-800 hover:bg-gray-100";
+    }
+  };
   return (
     <div className="bg-white shadow overflow-hidden border border-gray-200 rounded-xl">
       <div className="px-4 py-4">
@@ -18,29 +35,10 @@ const ActiveApplicationCard: React.FC<ActiveApplicationParams> = ({ name, locati
             <p className="text-sm font-medium text-[#3d84a8] truncate">{name}</p>
             <p className="text-xs text-gray-500 mt-1">{role}</p>
           </div>
-          <div className="flex flex-col items-end">
-            <div className="flex items-center">
-              <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 mr-2">
-                {status}
-              </p>
-              <p className="flex items-center text-gray-400 cursor-pointer">
-                <Edit className="h-4" />
-              </p>
-            </div>
-            <p className="flex justify-end items-center text-xs text-gray-500 mt-1 cursor-pointer">Application Link</p>
-          </div>
-        </div>
-        <div className="mt-1 flex  md:block lg:flex lg:justify-between space-y-2 justify-between items-center">
-          <div className="lg:flex">
-            <p className="flex items-center text-sm text-gray-500">
-              <MapPin className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
-              {location}
-            </p>
-          </div>
-          <div className="flex items-center text-sm text-gray-500 sm:mt-0 justify-items-end">
-            <p className="flex gap-1">
-              <Calendar className="flex-shrink-0 h-5 w-5 text-gray-400" />
-              Next Event <time dateTime={event}>{new Date(event).toLocaleDateString()}</time>
+          <div className="flex items-center gap-2">
+            <Badge className={cn(getStatusStyles(status), "font-normal text-[10px]")}>{status}</Badge>
+            <p className="flex items-center text-gray-400 cursor-pointer">
+              <Expand className="h-4" />
             </p>
           </div>
         </div>
