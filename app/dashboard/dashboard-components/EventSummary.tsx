@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlusCircle } from "lucide-react";
@@ -44,11 +44,10 @@ export default function EventSummary({ className, ...props }: EventSummaryProps)
         const res = await fetch(`/api/events`);
         if (!res.ok) throw new Error("Failed to fetch events");
         const data = await res.json();
-        setEvents(Array.isArray(data) ? data.map(event => ({ ...event, event_date: new Date(event.event_date) })) : []);
+        setEvents(Array.isArray(data) ? data.map((event) => ({ ...event, event_date: new Date(event.event_date) })) : []);
       } catch (err) {
         console.error(err);
       }
-
     };
     fetchApplications();
     fetchEvents();
@@ -71,7 +70,7 @@ export default function EventSummary({ className, ...props }: EventSummaryProps)
   };
 
   return (
-    <Card className={className} {...props}>
+    <Card className="flex flex-col justify-between rounded-xl h-full">
       <CardHeader>
         <CardTitle className="text-sm font-medium">Upcoming Events</CardTitle>
       </CardHeader>
@@ -85,62 +84,64 @@ export default function EventSummary({ className, ...props }: EventSummaryProps)
           ))}
         </ul>
       </CardContent>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button size="sm" className="absolute bottom-0 w-full hover:bg-[#2f6783] rounded-b-xl">
-            <PlusCircle className="h-4 w-full " />
-            Add Event
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add New Event</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="eventTitle">Event Title</Label>
-              <Input
-                id="eventTitle"
-                placeholder="Enter event title"
-                value={newEventTitle}
-                onChange={(e) => setNewEventTitle(e.target.value)}
-              />
+      <CardFooter>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button size="sm" className="w-full hover:bg-[#2f6783] rounded-b-xl">
+              <PlusCircle className="h-4 w-full " />
+              Add Event
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Event</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="eventTitle">Event Title</Label>
+                <Input
+                  id="eventTitle"
+                  placeholder="Enter event title"
+                  value={newEventTitle}
+                  onChange={(e) => setNewEventTitle(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="eventDate">Event Date</Label>
+                <Input id="eventDate" type="date" value={newEventDate} onChange={(e) => setNewEventDate(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="status">Application</Label>
+                <Select
+                  name="application"
+                  value={applicationId?.toString() || ""}
+                  onValueChange={(value) => {
+                    setApplicationId(parseInt(value, 10));
+                  }}
+                >
+                  <SelectTrigger id="application">
+                    <SelectValue placeholder="Select application" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {applications.map((application) => (
+                      <SelectItem key={application.application_id} value={application.application_id.toString()}>
+                        {application.institution_name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="eventDate">Event Date</Label>
-              <Input id="eventDate" type="date" value={newEventDate} onChange={(e) => setNewEventDate(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="status">Application</Label>
-              <Select
-                name="application"
-                value={applicationId?.toString() || ''}
-                onValueChange={((value) => {
-                  setApplicationId(parseInt(value, 10));
-                })}
-              >
-                <SelectTrigger id="application">
-                  <SelectValue placeholder="Select application" />
-                </SelectTrigger>
-                <SelectContent>
-                  {applications.map((application) => (
-                    <SelectItem key={application.application_id} value={application.application_id.toString()}>
-                      {application.institution_name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <DialogClose
-            onClick={addEvent}
-            className="w-full py-2 bg-primary hover:bg-[#2f6783] text-primary-foreground text-sm flex flex-row justify-center items-center"
-          >
-            <PlusCircle className="h-4" />
-            <span>Add Event</span>
-          </DialogClose>
-        </DialogContent>
-      </Dialog>
+            <DialogClose
+              onClick={addEvent}
+              className="w-full py-2 bg-primary hover:bg-[#2f6783] text-primary-foreground text-sm flex flex-row justify-center items-center"
+            >
+              <PlusCircle className="h-4" />
+              <span>Add Event</span>
+            </DialogClose>
+          </DialogContent>
+        </Dialog>
+      </CardFooter>
     </Card>
   );
 }

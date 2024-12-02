@@ -12,7 +12,9 @@ export default function DashboardLayout() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <ActiveApplicationSummary />
         <WishlistApplicationSummary />
-        <EventSummary className="relative md:col-span-2 lg:col-span-1 rounded-xl" />
+        <div className="md:col-span-2 lg:col-span-1">
+          <EventSummary />
+        </div>
       </div>
       <ScrollArea className=" pb-8">
         <div className="flex flex-col md:flex-row w-full gap-4">
