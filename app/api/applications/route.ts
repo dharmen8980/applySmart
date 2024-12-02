@@ -8,16 +8,19 @@ export async function GET(request: NextRequest) {
     const session = await verifySession();
     const email = session?.user?.email;
 
+    // If the email is missing, respond with an error
+    if (!email) {
+      return NextResponse.json({ error: "User email not found in session" }, { status: 401 });
+    }
+
+
     const statusFilter = request.nextUrl.searchParams.get("statusFilter");
     const searchQuery = request.nextUrl.searchParams.get("searchQuery");
 
-    let sql = "SELECT * FROM Applications";
+    let sql = "SELECT * FROM Applications WHERE email = ?";
     let params: string[] = [];
 
-    if (email) {
-      sql += " WHERE email = ?";
-      params.push(email);
-    }
+    params.push(email);
 
     // filter applications by status, if applicable
     if (statusFilter) {
@@ -58,6 +61,12 @@ export async function POST(request: NextRequest) {
   try {
     const session = await verifySession();
     const email = session.user?.email;
+
+    // If the email is missing, respond with an error
+    if (!email) {
+      return NextResponse.json({ error: "User email not found in session" }, { status: 401 });
+    }
+
     const { application_type, institution_name, location, role_program, application_link, next_event_date, status, notes } =
       await request.json();
 

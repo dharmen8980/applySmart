@@ -11,19 +11,17 @@ import { DialogClose } from "@radix-ui/react-dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ApplicationData } from "@/app/dashboard/ActiveApplications";
 
-interface CalendarCardProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface EventSummaryProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 interface Event {
-  applicationId: number;
-  date: Date;
-  title: string;
+  event_id?: number;
+  application_id: number;
+  event_date: Date;
+  event_title: string;
 }
 
-export default function CalendarCard({ className, ...props }: CalendarCardProps) {
-  const [events, setEvents] = useState<Event[]>([
-    { applicationId: -1, date: new Date(2023, 5, 15), title: "Interview with TechCorp" },
-    { applicationId: -2, date: new Date(2023, 5, 18), title: "Follow-up with InnoSoft" },
-  ]);
+export default function EventSummary({ className, ...props }: EventSummaryProps) {
+  const [events, setEvents] = useState<Event[]>([]);
   const [newEventTitle, setNewEventTitle] = useState("");
   const [newEventDate, setNewEventDate] = useState("");
   const [applicationId, setApplicationId] = useState<number | null>(null);
@@ -41,21 +39,38 @@ export default function CalendarCard({ className, ...props }: CalendarCardProps)
       }
     };
 
+    const fetchEvents = async () => {
+      try {
+        const res = await fetch(`/api/events`);
+        if (!res.ok) throw new Error("Failed to fetch events");
+        const data = await res.json();
+        setEvents(Array.isArray(data) ? data.map(event => ({ ...event, event_date: new Date(event.event_date) })) : []);
+      } catch (err) {
+        console.error(err);
+      }
+
+    };
     fetchApplications();
+    fetchEvents();
   }, []);
+
+
+  console.log(events);
 
   const addEvent = () => {
     if (applicationId && newEventTitle && newEventDate) {
-      setEvents([...events, { applicationId: applicationId, date: new Date(newEventDate), title: newEventTitle }]);
+      setEvents([...events, { application_id: applicationId, event_date: new Date(newEventDate), event_title: newEventTitle }]);
       setNewEventTitle("");
       setNewEventDate("");
-    }
-  };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setApplicationId(value ? parseInt(value) : null);
-    console.log("Application ID:", applicationId);
+      fetch("/api/events", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title: newEventTitle, date: newEventDate, applicationId }),
+      });
+    }
   };
 
   return (
@@ -67,8 +82,8 @@ export default function CalendarCard({ className, ...props }: CalendarCardProps)
         <ul className="space-y-2">
           {events.map((event, index) => (
             <li key={index} className="flex justify-between items-center text-sm">
-              <span>{event.title}</span>
-              <span className="text-muted-foreground">{event.date.toLocaleDateString()}</span>
+              <span>{event.event_title}</span>
+              <span className="text-muted-foreground">{event.event_date.toLocaleDateString()}</span>
             </li>
           ))}
         </ul>
@@ -102,14 +117,17 @@ export default function CalendarCard({ className, ...props }: CalendarCardProps)
               <Label htmlFor="status">Application</Label>
               <Select
                 name="application"
-                value={applications.find((app) => app.application_id === applicationId)?.institution_name}
+                value={applicationId?.toString() || ''}
+                onValueChange={((value) => {
+                  setApplicationId(parseInt(value, 10));
+                })}
               >
                 <SelectTrigger id="application">
                   <SelectValue placeholder="Select application" />
                 </SelectTrigger>
                 <SelectContent>
                   {applications.map((application) => (
-                    <SelectItem key={application.application_id} value={application.application_id}>
+                    <SelectItem key={application.application_id} value={application.application_id.toString()}>
                       {application.institution_name}
                     </SelectItem>
                   ))}
