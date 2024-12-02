@@ -54,9 +54,6 @@ export default function EventSummary({ className, ...props }: EventSummaryProps)
     fetchEvents();
   }, []);
 
-
-  console.log(events);
-
   const addEvent = () => {
     if (applicationId && newEventTitle && newEventDate) {
       setEvents([...events, { application_id: applicationId, event_date: new Date(newEventDate), event_title: newEventTitle }]);
@@ -90,7 +87,7 @@ export default function EventSummary({ className, ...props }: EventSummaryProps)
       </CardContent>
       <Dialog>
         <DialogTrigger asChild>
-          <Button size="sm" className="w-full hover:bg-[#2f6783] rounded-b-xl">
+          <Button size="sm" className="absolute bottom-0 w-full hover:bg-[#2f6783] rounded-b-xl">
             <PlusCircle className="h-4 w-full " />
             Add Event
           </Button>
