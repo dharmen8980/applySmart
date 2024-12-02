@@ -10,7 +10,7 @@ interface PaginationFooterProps {
 
 export default function PaginationFooter({ currentPage, totalPages, onPreviousPage, onNextPage }: PaginationFooterProps) {
   return (
-    <div className="flex items-center justify-between  px-4 pb-1 w-full">
+    <div className="flex items-center justify-between  px-3 pb-1 w-full">
       <div className="flex flex-1 items-center justify-between">
         <Button
           variant="ghost"

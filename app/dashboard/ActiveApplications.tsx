@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import AddApplication from "@/components/modals/AddApplication";
 import ActiveApplicationHeader from "@/components/ActiveApplicationHeader";
 import PaginationFooter from "@/components/PaginationFooter";
+import { STATUS } from "../types/enum/page";
 
 export interface ApplicationData {
   application_id: number;
@@ -59,7 +60,7 @@ export default function ActiveApplications() {
   return (
     <Card className="w-full rounded-xl">
       <CardHeader>
-        <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-row items-center justify-between mb-2">
           <CardTitle className="text-2xl text-primary-dark">Active Applications</CardTitle>
           <AddApplication />
         </div>

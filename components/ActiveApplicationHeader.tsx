@@ -20,7 +20,7 @@ export default function ActiveApplicationHeader() {
             <SelectValue placeholder="Filter By" />
           </SelectTrigger>
           <SelectContent className="p-0">
-            <SelectItem value={"All"}>Default</SelectItem>
+            <SelectItem value={"All"}>All Status</SelectItem>
             <SelectItem value={STATUS.APPLIED}>Applied</SelectItem>
             <SelectItem value={STATUS.INPROGRESS}>In Progress</SelectItem>
             <SelectItem value={STATUS.ACCEPTED}>Accepted</SelectItem>
