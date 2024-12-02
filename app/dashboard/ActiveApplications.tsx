@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import ActiveApplicationCard from "@/components/ActiveApplicationCard";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { useSession } from "next-auth/react";
 import AddApplication from "@/components/modals/AddApplication";
+import ActiveApplicationHeader from "@/components/ActiveApplicationHeader";
+import PaginationFooter from "@/components/PaginationFooter";
 
 export interface ApplicationData {
   application_id: number;
@@ -20,6 +22,8 @@ export default function ActiveApplications() {
   const [applications, setApplications] = useState<ApplicationData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(10);
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -45,12 +49,21 @@ export default function ActiveApplications() {
   if (isLoading) {
     return <div>Loading applications...</div>;
   }
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(1, prev - 1));
+  };
 
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+  };
   return (
     <Card className="w-full rounded-xl">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-2xl text-primary-dark">Active Applications</CardTitle>
-        <AddApplication />
+      <CardHeader>
+        <div className="flex flex-row items-center justify-between">
+          <CardTitle className="text-2xl text-primary-dark">Active Applications</CardTitle>
+          <AddApplication />
+        </div>
+        <ActiveApplicationHeader />
       </CardHeader>
       <CardContent className="space-y-2">
         {applications.length === 0 ? (
@@ -68,6 +81,14 @@ export default function ActiveApplications() {
           ))
         )}
       </CardContent>
+      <CardFooter>
+        <PaginationFooter
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPreviousPage={handlePreviousPage}
+          onNextPage={handleNextPage}
+        />
+      </CardFooter>
     </Card>
   );
 }

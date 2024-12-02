@@ -1,4 +1,5 @@
 "use client";
+import { STATUS } from "@/app/types/enum/page";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Briefcase } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -13,8 +14,8 @@ export default function ActiveApplicationSummary() {
   const [allApplications, setAllApplications] = useState<ApplicationGroup[]>([]);
   const { data: session } = useSession();
   const [error, setError] = useState<string | null>(null);
-  
-  useEffect(() => { 
+
+  useEffect(() => {
     console.log("Fetching applications");
     const fetchApplications = async () => {
       try {
@@ -51,25 +52,24 @@ export default function ActiveApplicationSummary() {
       <CardContent className="grid items-stretch mt-4">
         <div className="flex justify-between h-fit">
           <div className="flex flex-col items-center">
-            <p className="text-2xl font-bold">{getCount('Applied')}</p>
+            <p className="text-2xl font-bold">{getCount(STATUS.APPLIED)}</p>
             <p className="text-sm text-gray-500">Applied</p>
           </div>
 
           <div className="flex flex-col items-center">
-            <p className="text-2xl font-bold">{getCount('In Progress')}</p>
+            <p className="text-2xl font-bold">{getCount(STATUS.INPROGRESS)}</p>
             <p className="text-sm text-gray-500">In Progress</p>
           </div>
 
           <div className="flex flex-col items-center">
-            <p className="text-2xl font-bold">{getCount('Accepted')}</p>
+            <p className="text-2xl font-bold">{getCount(STATUS.ACCEPTED)}</p>
             <p className="text-sm text-gray-500">Accepted</p>
           </div>
 
           <div className="flex flex-col items-center">
-            <p className="text-2xl font-bold">{getCount('Rejected')}</p>
+            <p className="text-2xl font-bold">{getCount(STATUS.REJECTED)}</p>
             <p className="text-sm text-gray-500">Rejected</p>
           </div>
-
         </div>
       </CardContent>
       <CardFooter className="bg-primary rounded-b-xl h-9">

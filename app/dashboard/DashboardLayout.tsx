@@ -1,6 +1,5 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ActiveApplicationSummary from "./dashboard-components/ActiveApplicationSummary";
-import ActiveApplicationTable from "./dashboard-components/ActiveApplicationTable";
 import EventSummary from "./dashboard-components/EventSummary";
 import WishlistApplicationSummary from "./dashboard-components/WishlistApplicationSummary";
 import WishlistApplicationsTable from "./dashboard-components/WishlistApplicationTable";
@@ -21,10 +20,6 @@ export default function DashboardLayout() {
           <ActiveApplications />
           <ActiveApplications />
         </div>
-        {/* <ActiveApplicationTable />
-        <div className="mt-8">
-          <WishlistApplicationsTable />
-        </div> */}
       </ScrollArea>
     </div>
   );
