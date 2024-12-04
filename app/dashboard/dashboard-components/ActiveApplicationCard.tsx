@@ -1,6 +1,6 @@
 import { Expand } from "lucide-react";
 import React from "react";
-import { Badge } from "./ui/badge";
+import { Badge } from "../../../components/ui/badge";
 import { STATUS } from "@/app/types/enum/page";
 import { cn } from "@/lib/utils";
 

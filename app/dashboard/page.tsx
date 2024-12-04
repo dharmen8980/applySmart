@@ -10,7 +10,7 @@ export default async function Dashboard() {
   }
 
   return (
-    <div>
+    <div className=" pt-8">
       <DashboardLayout />
     </div>
   );

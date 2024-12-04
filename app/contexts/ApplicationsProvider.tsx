@@ -13,7 +13,6 @@ interface ApplicationsProviderProps {
 export const ApplicationsProvider: React.FC<ApplicationsProviderProps> = ({ children }) => {
   const { data: session } = useSession();
   const [applicationStats, setApplicationStats] = useState<ApplicationGroup[]>([]);
-  const [applications, setApplications] = useState<ApplicationData[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -33,45 +32,26 @@ export const ApplicationsProvider: React.FC<ApplicationsProviderProps> = ({ chil
     }
   }, []);
 
-  const fetchApplications = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const res = await fetch(`/api/applications`);
-      if (!res.ok) throw new Error("Failed to fetch applications");
-      const data = await res.json();
-      setApplications(Array.isArray(data) ? data : []);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error occurred.");
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
   // Initial data fetching
   useEffect(() => {
     if (session) {
       fetchApplicationStats();
-      fetchApplications();
     }
-  }, [fetchApplicationStats, fetchApplications, session]);
+  }, [fetchApplicationStats, session]);
 
   // Fetch when shouldFetch is true
   useEffect(() => {
     if (shouldFetch) {
       fetchApplicationStats();
-      fetchApplications();
       resetFetch();
     }
-  }, [shouldFetch, fetchApplicationStats, fetchApplications, resetFetch]);
+  }, [shouldFetch, fetchApplicationStats, resetFetch]);
 
   return (
     <ApplicationsContext.Provider
       value={{
         applicationStats,
         setApplicationStats,
-        applications,
-        setApplications,
         error,
         setError,
         isLoading,
