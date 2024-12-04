@@ -4,6 +4,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
 import { getServerSession } from "next-auth";
+import { FetchTriggerProvider } from "./contexts/FetchTriggerProvider";
+import { ApplicationsProvider } from "./contexts/ApplicationsProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,11 +22,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en">
       <body className={inter.className}>
         <Provider>
-          <div className="bg-[#e6e6e6]">
-            <Header session={session} />
-            <main className="max-w-7xl mx-auto">{children}</main>
-            <Footer />
-          </div>
+          <FetchTriggerProvider>
+            <ApplicationsProvider>
+              <div className="bg-[#e6e6e6]">
+                <Header session={session} />
+                <main className="max-w-7xl mx-auto">{children}</main>
+                <Footer />
+              </div>
+            </ApplicationsProvider>
+          </FetchTriggerProvider>
         </Provider>
       </body>
     </html>

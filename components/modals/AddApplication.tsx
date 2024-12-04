@@ -1,4 +1,6 @@
-"use client";
+// src/components/modals/AddApplicationDialog.tsx
+
+"use client"; // Ensure this is a Client Component
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
@@ -10,7 +12,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogClose,
-} from "@/components/ui/dialog"; // Make sure to have Dialog components
+} from "@/components/ui/dialog"; // Ensure these are client components
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus, ArrowLeft, ArrowRight } from "lucide-react";
@@ -19,6 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { INSTITUTIONTYPE, STATUS } from "@/app/types/enum/page";
 import { ActiveApplication } from "@/app/models/ApplicationModel";
+import { useFetchTrigger } from "@/app/hooks/useFetchTrigger";
 
 export default function AddApplicationDialog() {
   const [formData, setFormData] = useState<ActiveApplication>({
@@ -33,6 +36,8 @@ export default function AddApplicationDialog() {
 
   const [currentStep, setCurrentStep] = useState<1 | 2>(1);
   const firstInputRef = useRef<HTMLInputElement | null>(null);
+
+  const { triggerFetch } = useFetchTrigger(); // Consume context
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -56,8 +61,6 @@ export default function AddApplicationDialog() {
       ...formData,
     };
 
-    console.log(dataToSend);
-
     try {
       const response = await fetch("/api/applications", {
         method: "POST",
@@ -69,7 +72,6 @@ export default function AddApplicationDialog() {
 
       if (response.ok) {
         console.log("Application submitted successfully");
-        // Optionally, reset the form or provide user feedback
         setFormData({
           application_type: INSTITUTIONTYPE.COMPANY,
           institution_name: "",
@@ -80,6 +82,7 @@ export default function AddApplicationDialog() {
           notes: "",
         });
         setCurrentStep(1); // Reset to Step 1 after submission
+        triggerFetch(); // Trigger data fetching in DashboardLayout
       } else {
         const errorData = await response.json();
         console.error("Failed to submit application:", errorData.error);

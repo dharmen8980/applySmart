@@ -2,7 +2,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import ActiveApplicationSummary from "./dashboard-components/ActiveApplicationSummary";
 import EventSummary from "./dashboard-components/EventSummary";
 import WishlistApplicationSummary from "./dashboard-components/WishlistApplicationSummary";
-import WishlistApplicationsTable from "./dashboard-components/WishlistApplicationTable";
 import ActiveApplications from "./ActiveApplications";
 
 export default function DashboardLayout() {
@@ -15,12 +14,9 @@ export default function DashboardLayout() {
           <EventSummary />
         </div>
       </div>
-      <ScrollArea className=" pb-8">
-        <div className="flex flex-col md:flex-row w-full gap-4">
-          <ActiveApplications />
-          <ActiveApplications />
-        </div>
-      </ScrollArea>
+      <div className="flex flex-col md:flex-row w-full gap-4">
+        <ActiveApplications />
+      </div>
     </div>
   );
 }

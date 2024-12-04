@@ -1,46 +1,24 @@
+// src/dashboard-components/ActiveApplicationSummary.tsx
+
 "use client";
+
+import React from "react";
 import { STATUS } from "@/app/types/enum/page";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Briefcase } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-
-interface ApplicationGroup {
-  status: string;
-  count: number;
-}
+import { useApplications } from "@/app/hooks/useApplications";
 
 export default function ActiveApplicationSummary() {
-  const [allApplications, setAllApplications] = useState<ApplicationGroup[]>([]);
-  const { data: session } = useSession();
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    console.log("Fetching applications");
-    const fetchApplications = async () => {
-      try {
-        if (!session?.user?.email) return;
-        const res = await fetch(`/api/applications/summary`);
-        if (!res.ok) throw new Error("Failed to fetch applications");
-        const data = await res.json();
-        setAllApplications(Array.isArray(data) ? data : []);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error occurred.");
-        console.log(err);
-      }
-    };
-    fetchApplications();
-  }, [session]);
-
-  const activeApplications = 4;
+  const { applicationStats, isLoading, error } = useApplications();
+  console.log(applicationStats);
 
   const getCount = (status: string) => {
-    const application = allApplications.find((application) => application.status === status);
+    const application = applicationStats.find((application) => application.status === status);
     return application?.count || 0;
   };
 
   const getSum = () => {
-    return allApplications.reduce((acc, application) => acc + application.count, 0);
+    return applicationStats.reduce((acc, application) => acc + application.count, 0);
   };
 
   return (

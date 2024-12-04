@@ -10,6 +10,21 @@ export interface ActiveApplication {
   notes: string;
 }
 
+export interface ApplicationData {
+  application_id: number;
+  email: string;
+  institution_name: string;
+  location: string;
+  role_program: string;
+  status: string;
+  next_event_date: string;
+}
+
+export interface ApplicationGroup {
+  status: string;
+  count: number;
+}
+
 export interface Wishlist {
   application_type: INSTITUTIONTYPE;
   institution_name: string;
@@ -19,8 +34,9 @@ export interface Wishlist {
   deadline?: string;
 }
 
-export interface Calendar {
-  institution_name: string;
-  event_title: string;
+export interface Event {
+  event_id?: number;
+  application_id: number;
   event_date: Date;
+  event_title: string;
 }
