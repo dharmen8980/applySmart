@@ -14,8 +14,12 @@ export default function DashboardLayout() {
           <EventSummary />
         </div>
       </div>
-      <div className="flex flex-col md:flex-row w-full gap-4">
+      <div className="flex flex-col md:flex-row w-full gap-4 mb-12">
         <ActiveApplications />
+        <div className="flex flex-col gap-5 w-full justify-between">
+          <ActiveApplicationSummary />
+          <WishlistApplicationSummary />
+        </div>
       </div>
     </div>
   );

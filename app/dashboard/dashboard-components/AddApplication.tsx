@@ -1,5 +1,3 @@
-// src/components/modals/AddApplicationDialog.tsx
-
 "use client"; // Ensure this is a Client Component
 
 import * as React from "react";
@@ -12,7 +10,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogClose,
-} from "@/components/ui/dialog"; // Ensure these are client components
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus, ArrowLeft, ArrowRight } from "lucide-react";

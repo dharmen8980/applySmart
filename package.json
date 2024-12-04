@@ -21,6 +21,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
+    "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.460.0",
     "mysql2": "^3.11.4",
     "next": "^15.0.3",
@@ -34,6 +35,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

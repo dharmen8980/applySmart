@@ -8,11 +8,9 @@ export async function GET(request: NextRequest) {
     const session = await verifySession();
     const email = session?.user?.email;
 
-    // If the email is missing, respond with an error
     if (!email) {
       return NextResponse.json({ error: "User email not found in session" }, { status: 401 });
     }
-
 
     const statusFilter = request.nextUrl.searchParams.get("statusFilter");
     const searchQuery = request.nextUrl.searchParams.get("searchQuery");
@@ -30,7 +28,7 @@ export async function GET(request: NextRequest) {
 
     // filter applications by search query, if applicable
     if (searchQuery) {
-      sql += ` AND (institution_name LIKE ? OR location LIKE ? OR role_program LIKE ? OR hr_email LIKE ? OR application_link LIKE ? OR notes LIKE ?)`;
+      sql += ` AND (institution_name LIKE ? OR location LIKE ? OR role_program LIKE ? OR hr_email LIKE ? OR application_link LIKE ? OR notes LIKE ? )`;
       params.push(
         `%${searchQuery}%`,
         `%${searchQuery}%`,
@@ -41,6 +39,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    sql += ` LIMIT 5`;
     const rows = (await query(sql, params)) as RowDataPacket[];
 
     if (rows.length === 0) {
