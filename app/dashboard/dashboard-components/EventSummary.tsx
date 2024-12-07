@@ -4,7 +4,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PlusCircle } from "lucide-react";
+import { Calendar, CalendarDays, Clock, PlusCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { DialogClose } from "@radix-ui/react-dialog";
@@ -104,18 +104,23 @@ export default function EventSummary() {
         {events.length === 0 ? (
           <p>No upcoming events found.</p>
         ) : (
-          <ul className="space-y-2">
-            {events.map((event, index) => {
-              const institutionName = event.institution_name || "Unknown Institution";
-
-              return (
-                <li key={index} className="flex justify-between items-center text-sm">
-                  <span>{institutionName}</span>
-                  <span className="text-muted-foreground">{event.event_date.toLocaleDateString()}</span>
-                </li>
-              );
-            })}
-          </ul>
+          <div className="grid grid-cols-3 gap-4">
+            <EventSummaryItem
+              icon={Calendar}
+              label="15 days"
+              count={5}
+            />
+            <EventSummaryItem
+              icon={Clock}
+              label="16-30 days"
+              count={10}
+            />
+            <EventSummaryItem
+              icon={CalendarDays}
+              label="30+ days"
+              count={20}
+            />
+        </div>
         )}
       </CardContent>
 
@@ -170,4 +175,22 @@ export default function EventSummary() {
       </CardFooter>
     </Card>
   );
+}
+
+interface EventSummaryItemProps {
+  icon: React.ElementType
+  label: string
+  count: number
+}
+
+function EventSummaryItem({ icon: Icon, label, count }: EventSummaryItemProps) {
+  return (
+    <div className="flex flex-col items-center space-y-1">
+      <div className="text-lg font-bold">{count}</div>
+      <div className="flex gap-2">
+        <div className="text-xs text-muted-foreground">{label}</div>
+      </div>
+      
+    </div>
+  )
 }
