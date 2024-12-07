@@ -9,10 +9,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Label } from "@/components/ui/label";
 import { DialogClose } from "@radix-ui/react-dialog";
 import debounce from "lodash.debounce";
-import { Event } from "@/app/models/ApplicationModel";
+import { Event, EventSummaryStats } from "@/app/models/ApplicationModel";
 import { ApplicationsCombobox } from "./ApplicationsCombobox"; // Adjust the import path accordingly
 
 export default function EventSummary() {
+  const [eventSummary, setEventSummary] = useState<EventSummaryStats[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
   const [newEventTitle, setNewEventTitle] = useState("");
   const [newEventDate, setNewEventDate] = useState("");
@@ -21,15 +22,12 @@ export default function EventSummary() {
   // Fetch Events
   const fetchEvents = useCallback(async () => {
     try {
-      const res = await fetch(`/api/events`);
+      const res = await fetch(`/api/events/count`);
       if (!res.ok) throw new Error("Failed to fetch events");
       const data = await res.json();
-      setEvents(
+      setEventSummary(
         Array.isArray(data)
-          ? data.map((event: any) => ({
-              ...event,
-              event_date: new Date(event.event_date),
-            }))
+          ? data
           : []
       );
     } catch (err) {
@@ -101,27 +99,20 @@ export default function EventSummary() {
 
       {/* Event List */}
       <CardContent>
-        {events.length === 0 ? (
-          <p>No upcoming events found.</p>
-        ) : (
           <div className="grid grid-cols-3 gap-4">
-            <EventSummaryItem
-              icon={Calendar}
-              label="15 days"
-              count={5}
-            />
-            <EventSummaryItem
-              icon={Clock}
-              label="16-30 days"
-              count={10}
-            />
-            <EventSummaryItem
-              icon={CalendarDays}
-              label="30+ days"
-              count={20}
-            />
+          <EventSummaryItem
+              label={'15 days'}
+              count={eventSummary.find((item) => item.labelCode === 1)?.count || 0}
+          />
+          <EventSummaryItem
+              label={'16-30 days'}
+              count={eventSummary.find((item) => item.labelCode === 2)?.count || 0}
+          />
+          <EventSummaryItem
+              label={'30+ days'}
+              count={eventSummary.find((item) => item.labelCode === 3)?.count || 0}
+          />
         </div>
-        )}
       </CardContent>
 
       {/* Footer with Add Event Button */}
@@ -178,12 +169,11 @@ export default function EventSummary() {
 }
 
 interface EventSummaryItemProps {
-  icon: React.ElementType
   label: string
-  count: number
+  count: number 
 }
 
-function EventSummaryItem({ icon: Icon, label, count }: EventSummaryItemProps) {
+function EventSummaryItem({ label, count }: EventSummaryItemProps) {
   return (
     <div className="flex flex-col items-center space-y-1">
       <div className="text-lg font-bold">{count}</div>

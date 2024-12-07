@@ -16,11 +16,11 @@ export async function GET(request: NextRequest) {
     
             let sql = `SELECT 
                             CASE
-                                WHEN DATEDIFF(NOW(), e.event_date) <= 15 THEN '15 days'
-                                WHEN DATEDIFF(NOW(), e.event_date) > 15 AND DATEDIFF(NOW(), e.event_date) <= 30 THEN '16-30 days'
-                                ELSE 'Over 30 days'
-                            END AS event_date_range,
-                            COUNT(*) AS event_count
+                                WHEN DATEDIFF(NOW(), e.event_date) <= 15 THEN 1
+                                WHEN DATEDIFF(NOW(), e.event_date) > 15 AND DATEDIFF(NOW(), e.event_date) <= 30 THEN 2
+                                ELSE 3
+                            END AS labelCode,
+                            COUNT(*) AS count
                         FROM Events e
                         JOIN Applications a ON e.application_id = a.application_id
                         WHERE a.email = ?`;

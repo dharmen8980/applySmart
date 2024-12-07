@@ -40,3 +40,8 @@ export interface Event {
   event_date: Date;
   event_title: string;
 }
+
+export interface EventSummaryStats {
+  labelCode: number
+  count: number
+}
