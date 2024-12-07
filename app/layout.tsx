@@ -26,7 +26,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <ApplicationsProvider>
               <div className="bg-[#e6e6e6]">
                 <Header session={session} />
-                <main className="max-w-7xl mx-auto">{children}</main>
+                <main className="max-w-[100rem] mx-auto pt-12 contai">{children}</main>
                 <Footer />
               </div>
             </ApplicationsProvider>

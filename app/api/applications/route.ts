@@ -14,39 +14,78 @@ export async function GET(request: NextRequest) {
 
     const statusFilter = request.nextUrl.searchParams.get("statusFilter");
     const searchQuery = request.nextUrl.searchParams.get("searchQuery");
+    const pageParam = request.nextUrl.searchParams.get("page");
+    const limitParam = request.nextUrl.searchParams.get("limit");
 
+    // Default values
+    const page = pageParam ? parseInt(pageParam, 10) : 1;
+    const limit = limitParam ? parseInt(limitParam, 10) : 5;
+    const offset = (page - 1) * limit;
+
+    // Base SQL query
     let sql = "SELECT * FROM Applications WHERE email = ?";
-    let params: string[] = [];
+    let params: string[] = [email];
 
-    params.push(email);
-
-    // filter applications by status, if applicable
+    // Apply status filter if provided
     if (statusFilter) {
       sql += " AND status = ?";
       params.push(statusFilter);
     }
 
-    // filter applications by search query, if applicable
+    // Apply search query if provided
     if (searchQuery) {
-      sql += ` AND (institution_name LIKE ? OR location LIKE ? OR role_program LIKE ? OR hr_email LIKE ? OR application_link LIKE ? OR notes LIKE ? )`;
-      params.push(
-        `%${searchQuery}%`,
-        `%${searchQuery}%`,
-        `%${searchQuery}%`,
-        `%${searchQuery}%`,
-        `%${searchQuery}%`,
-        `%${searchQuery}%`
-      );
+      sql += ` AND (
+        institution_name LIKE ? OR 
+        location LIKE ? OR 
+        role_program LIKE ? OR 
+        hr_email LIKE ? OR 
+        application_link LIKE ? OR 
+        notes LIKE ?
+      )`;
+      const searchPattern = `%${searchQuery}%`;
+      params.push(searchPattern, searchPattern, searchPattern, searchPattern, searchPattern, searchPattern);
     }
 
-    sql += ` LIMIT 5`;
-    const rows = (await query(sql, params)) as RowDataPacket[];
+    // Clone the SQL for counting total records
+    const countSql =
+      `SELECT COUNT(*) as total FROM Applications WHERE email = ?` +
+      (statusFilter ? " AND status = ?" : "") +
+      (searchQuery
+        ? ` AND (
+          institution_name LIKE ? OR 
+          location LIKE ? OR 
+          role_program LIKE ? OR 
+          hr_email LIKE ? OR 
+          application_link LIKE ? OR 
+          notes LIKE ?
+        )`
+        : "");
 
-    if (rows.length === 0) {
+    const countParams = [...params]; // Clone current params for count query
+
+    // Append LIMIT and OFFSET for pagination
+    sql += ` LIMIT ? OFFSET ?`;
+    params.push(limit.toString(), offset.toString());
+
+    // Execute both queries in parallel
+    const [rows, countResult] = await Promise.all([query(sql, params), query(countSql, countParams)]);
+
+    const total = (countResult as RowDataPacket[])[0].total;
+    const totalPages = Math.ceil(total / limit);
+
+    if ((rows as RowDataPacket[]).length === 0) {
       return NextResponse.json({ message: "No applications found" }, { status: 200 });
     }
 
-    return NextResponse.json(rows);
+    return NextResponse.json({
+      data: rows,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages,
+      },
+    });
   } catch (error) {
     console.error("Error fetching applications:", error);
     if (error instanceof AuthenticationError) {

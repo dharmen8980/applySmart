@@ -1,4 +1,4 @@
-import { EVENTTYPE, INSTITUTIONTYPE, STATUS } from "../types/enum/page";
+import { INSTITUTIONTYPE, STATUS } from "../types/enum/page";
 
 export interface ActiveApplication {
   application_type: INSTITUTIONTYPE;
@@ -28,7 +28,6 @@ export interface ApplicationGroup {
 export interface Wishlist {
   application_type: INSTITUTIONTYPE;
   institution_name: string;
-  location: string;
   role_program: Date;
   posting_date?: Date;
   deadline?: string;
