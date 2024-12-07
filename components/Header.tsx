@@ -8,18 +8,19 @@ import { usePathname } from "next/navigation";
 export default function Header(session: any) {
   const pathName = usePathname();
   return (
-    <header className="bg-primary text-primary-foreground">
+    <header className="bg-primary text-primary-foreground fixed w-full">
       <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold flex flex-row gap-1 items-center">
           <BiSolidGraduation />
           applySmart
         </Link>
-        <nav>
+
+        <nav className="flex space-x-4 items-center">
+          <Link href="/dashboard" className={pathName === "/dashboard" ? "border-b-white border-b-4" : ""}>
+            Dashboard
+          </Link>
           {session.session ? (
-            <ul className="flex space-x-4 items-center">
-              <Link href="/dashboard" className={pathName === "/dashboard" ? "border-b-white border-b-4" : ""}>
-                Dashboard
-              </Link>
+            <ul>
               <Button variant="ghost" onClick={() => signOut()}>
                 Sign Out
               </Button>
