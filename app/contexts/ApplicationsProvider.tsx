@@ -1,4 +1,4 @@
-"use client"; // Ensure this is a Client Component
+"use client";
 
 import React, { useState, useEffect, useCallback, ReactNode } from "react";
 import { ApplicationsContext } from "./ApplicationsContext";

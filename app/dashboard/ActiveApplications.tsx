@@ -22,10 +22,10 @@ export default function ActiveApplications() {
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [applicationsPerPage] = useState<number>(10);
+  const [applicationsPerPage] = useState<number>(5);
 
-  // Total Pages Calculation
-  const totalPages = Math.ceil(applications.length / applicationsPerPage);
+  // Pagination Metadata
+  const [totalPages, setTotalPages] = useState<number>(1);
 
   // Fetch Applications Function
   const fetchApplications = useCallback(async () => {
@@ -34,6 +34,9 @@ export default function ActiveApplications() {
 
     try {
       const params = new URLSearchParams();
+      params.append("page", currentPage.toString());
+      params.append("limit", applicationsPerPage.toString());
+
       if (statusFilter && statusFilter !== "All") {
         params.append("statusFilter", statusFilter);
       }
@@ -49,14 +52,17 @@ export default function ActiveApplications() {
       }
 
       const data = await response.json();
-      setApplications(Array.isArray(data) ? data : []);
+
+      // Assuming the API returns { data: [...], pagination: { total, page, limit, totalPages } }
+      setApplications(Array.isArray(data.data) ? data.data : []);
+      setTotalPages(data.pagination.totalPages);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Unknown error occurred.";
       setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
-  }, [searchQuery, statusFilter]);
+  }, [currentPage, applicationsPerPage, searchQuery, statusFilter]);
 
   // Initial Fetch and Fetch on Dependencies Change
   useEffect(() => {
@@ -89,11 +95,6 @@ export default function ActiveApplications() {
     setCurrentPage(1); // Reset to first page on filter change
   };
 
-  // Get Current Applications Based on Pagination
-  const indexOfLastApplication = currentPage * applicationsPerPage;
-  const indexOfFirstApplication = indexOfLastApplication - applicationsPerPage;
-  const currentApplications = applications.slice(indexOfFirstApplication, indexOfLastApplication);
-
   // Cleanup Debounce on Unmount
   useEffect(() => {
     return () => {
@@ -102,9 +103,8 @@ export default function ActiveApplications() {
   }, [debouncedSearch]);
 
   return (
-    <Card className="w-full rounded-xl flex flex-col justify-between">
-      {/* Header with Title and Add Application Button */}
-      <CardHeader className="pb-2">
+    <Card className="w-full rounded-xl h-full relative">
+      <CardHeader className="">
         <div className="flex flex-row items-center justify-between mb-2">
           <CardTitle className="text-2xl text-primary-dark">Active Applications</CardTitle>
           <AddApplicationDialog />
@@ -140,19 +140,19 @@ export default function ActiveApplications() {
       </CardHeader>
 
       {/* Content with Applications List */}
-      <CardContent className="space-y-1.5 overflow-hidden min-h-[400px]">
+      <CardContent className="space-y-1.5">
         {isLoading ? (
           <div className="flex justify-center items-center h-full">
-            <div className="loader"></div> {/* Replace with a spinner or skeleton */}
+            <div className="loader"></div>
           </div>
         ) : error ? (
           <p className="text-red-500">Error: {error}</p>
-        ) : currentApplications.length === 0 ? (
+        ) : applications.length === 0 ? (
           <p>No active applications found.</p>
         ) : (
-          currentApplications.map((application) => (
+          applications.map((application) => (
             <ActiveApplicationCard
-              key={application.application_id} // Use unique identifier
+              key={application.application_id}
               name={application.institution_name}
               location={application.location}
               role={application.role_program}
@@ -164,7 +164,7 @@ export default function ActiveApplications() {
       </CardContent>
 
       {/* Footer with Pagination Controls */}
-      <CardFooter>
+      <CardFooter className="absolute bottom-0 w-full">
         <div className="flex items-center justify-between px-3 pb-2 w-full">
           <div className="flex flex-1 items-center justify-between">
             <Button

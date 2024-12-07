@@ -14,3 +14,10 @@ export enum EVENTTYPE {
   POSTINGDATE = "POSTINGDATE",
   DEADLINE = "DEADLINE",
 }
+
+export interface Event {
+  id: number;
+  date: Date;
+  title: string;
+  description: string;
+}
