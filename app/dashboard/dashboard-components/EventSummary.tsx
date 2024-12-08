@@ -74,6 +74,9 @@ export default function EventSummary() {
         console.error("Error submitting event:", error);
         setEvents(events.filter((event) => event !== newEvent)); // Remove optimistically added event
       }
+    } else {
+      console.error("Missing required fields");
+      console.log(selectedApplicationId, newEventTitle, newEventDate);
     }
   };
 
@@ -149,8 +152,7 @@ export default function EventSummary() {
               <div className="space-y-2">
                 <Label htmlFor="application">Application</Label>
                 <ApplicationsCombobox
-                  selectedApplicationId={selectedApplicationId}
-                  setSelectedApplicationId={setSelectedApplicationId}
+                  onChange={(applicationId) => setSelectedApplicationId(applicationId)}
                 />
               </div>
             </div>

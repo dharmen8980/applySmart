@@ -44,3 +44,8 @@ export interface EventSummaryStats {
   labelCode: number
   count: number
 }
+
+export interface EventApplicationDropdown {
+  application_id: number;
+  institution_name: string;
+}
