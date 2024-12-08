@@ -10,14 +10,17 @@ import { Label } from "@/components/ui/label";
 import { DialogClose } from "@radix-ui/react-dialog";
 import debounce from "lodash.debounce";
 import { Event, EventSummaryStats } from "@/app/models/ApplicationModel";
-import { ApplicationsCombobox } from "./ApplicationsCombobox"; // Adjust the import path accordingly
+import { ApplicationsCombobox } from "./ApplicationsCombobox"; 
+import { useFetchTrigger } from "@/app/hooks/useFetchTrigger";
 
 export default function EventSummary() {
   const [eventSummary, setEventSummary] = useState<EventSummaryStats[]>([]);
-  const [events, setEvents] = useState<Event[]>([]);
+  const [event, setEvent] = useState<Event | null>();
   const [newEventTitle, setNewEventTitle] = useState("");
   const [newEventDate, setNewEventDate] = useState("");
   const [selectedApplicationId, setSelectedApplicationId] = useState<number | null>(null);
+
+  const { shouldFetchEvent, triggerEventSummaryFetch, resetEventSummaryFetch } = useFetchTrigger();
 
   // Fetch Events
   const fetchEvents = useCallback(async () => {
@@ -37,7 +40,15 @@ export default function EventSummary() {
 
   useEffect(() => {
     fetchEvents();
-  }, [fetchEvents]);
+    resetEventSummaryFetch();
+  }, [fetchEvents, shouldFetchEvent]);
+
+
+  const resetForm = () => {
+    setNewEventTitle("");
+    setNewEventDate("");
+    setSelectedApplicationId(null);
+  }
 
   // Add Event Function
   const addEvent = async () => {
@@ -47,11 +58,9 @@ export default function EventSummary() {
         event_date: new Date(newEventDate),
         event_title: newEventTitle,
       };
-      setEvents([...events, newEvent]); // Optimistically add the event
-      setNewEventTitle("");
-      setNewEventDate("");
-      setSelectedApplicationId(null);
-
+      setEvent(newEvent);
+      resetForm();
+      
       try {
         const response = await fetch("/api/events", {
           method: "POST",
@@ -68,30 +77,18 @@ export default function EventSummary() {
         if (!response.ok) {
           const errorData = await response.json();
           console.error("Failed to submit event:", errorData.error);
-          setEvents(events.filter((event) => event !== newEvent)); // Remove optimistically added event
+          setEvent(null); 
+        } else {
+          triggerEventSummaryFetch();
         }
       } catch (error) {
         console.error("Error submitting event:", error);
-        setEvents(events.filter((event) => event !== newEvent)); // Remove optimistically added event
+        setEvent(null); 
       }
     } else {
       console.error("Missing required fields");
-      console.log(selectedApplicationId, newEventTitle, newEventDate);
     }
   };
-
-  // Debounced Submit Handler to prevent accidental multiple submissions
-  const debouncedAddEvent = React.useRef(
-    debounce(() => {
-      addEvent();
-    }, 300)
-  ).current;
-
-  useEffect(() => {
-    return () => {
-      debouncedAddEvent.cancel();
-    };
-  }, [debouncedAddEvent]);
 
   return (
     <Card className="flex flex-col justify-between rounded-xl h-full">
@@ -157,7 +154,7 @@ export default function EventSummary() {
               </div>
             </div>
             <DialogClose
-              onClick={debouncedAddEvent}
+              onClick={addEvent}
               className="w-full py-2 bg-primary hover:bg-[#2f6783] text-primary-foreground text-sm flex flex-row justify-center items-center mt-4 rounded"
             >
               <PlusCircle className="h-4 mr-2" />

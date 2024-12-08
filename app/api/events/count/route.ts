@@ -15,15 +15,16 @@ export async function GET(request: NextRequest) {
             }
     
             let sql = `SELECT 
-                            CASE
-                                WHEN DATEDIFF(NOW(), e.event_date) <= 15 THEN 1
-                                WHEN DATEDIFF(NOW(), e.event_date) > 15 AND DATEDIFF(NOW(), e.event_date) <= 30 THEN 2
-                                ELSE 3
-                            END AS labelCode,
-                            COUNT(*) AS count
-                        FROM Events e
-                        JOIN Applications a ON e.application_id = a.application_id
-                        WHERE a.email = ?`;
+                        CASE
+                            WHEN DATEDIFF(e.event_date, NOW()) BETWEEN 0 AND 15 THEN 1
+                            WHEN DATEDIFF(e.event_date, NOW()) BETWEEN 16 AND 30 THEN 2
+                            ELSE 3
+                        END AS labelCode,
+                        COUNT(*) AS count
+                    FROM Events e
+                    JOIN Applications a ON e.application_id = a.application_id
+                    WHERE a.email = ? AND DATEDIFF(e.event_date, NOW()) >= 0
+                    GROUP BY labelCode;`;
     
             const params: string[] = [email];
     
