@@ -2,28 +2,17 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Calendar, CalendarDays, Clock, PlusCircle } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { DialogClose } from "@radix-ui/react-dialog";
-import debounce from "lodash.debounce";
 import { Event, EventSummaryStats } from "@/app/models/ApplicationModel";
-import { ApplicationsCombobox } from "./ApplicationsCombobox"; 
 import { useFetchTrigger } from "@/app/hooks/useFetchTrigger";
+import AddEvent from "./AddEvent";
 
 export default function EventSummary() {
   const [eventSummary, setEventSummary] = useState<EventSummaryStats[]>([]);
-  const [event, setEvent] = useState<Event | null>();
-  const [newEventTitle, setNewEventTitle] = useState("");
-  const [newEventDate, setNewEventDate] = useState("");
-  const [selectedApplicationId, setSelectedApplicationId] = useState<number | null>(null);
 
-  const { shouldFetchEvent, triggerEventSummaryFetch, resetEventSummaryFetch } = useFetchTrigger();
+  const { shouldFetchEvent, resetEventSummaryFetch } = useFetchTrigger();
 
   // Fetch Events
-  const fetchEvents = useCallback(async () => {
+  const fetchEventsCount = useCallback(async () => {
     try {
       const res = await fetch(`/api/events/count`);
       if (!res.ok) throw new Error("Failed to fetch events");
@@ -39,56 +28,9 @@ export default function EventSummary() {
   }, []);
 
   useEffect(() => {
-    fetchEvents();
+    fetchEventsCount();
     resetEventSummaryFetch();
-  }, [fetchEvents, shouldFetchEvent]);
-
-
-  const resetForm = () => {
-    setNewEventTitle("");
-    setNewEventDate("");
-    setSelectedApplicationId(null);
-  }
-
-  // Add Event Function
-  const addEvent = async () => {
-    if (selectedApplicationId && newEventTitle && newEventDate) {
-      const newEvent: Event = {
-        application_id: selectedApplicationId,
-        event_date: new Date(newEventDate),
-        event_title: newEventTitle,
-      };
-      setEvent(newEvent);
-      resetForm();
-      
-      try {
-        const response = await fetch("/api/events", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: newEventTitle,
-            date: newEventDate,
-            applicationId: selectedApplicationId,
-          }),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error("Failed to submit event:", errorData.error);
-          setEvent(null); 
-        } else {
-          triggerEventSummaryFetch();
-        }
-      } catch (error) {
-        console.error("Error submitting event:", error);
-        setEvent(null); 
-      }
-    } else {
-      console.error("Missing required fields");
-    }
-  };
+  }, [fetchEventsCount, shouldFetchEvent]);
 
   return (
     <Card className="flex flex-col justify-between rounded-xl h-full">
@@ -117,51 +59,7 @@ export default function EventSummary() {
 
       {/* Footer with Add Event Button */}
       <CardFooter>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button size="sm" className="w-full hover:bg-[#2f6783] rounded-b-xl flex items-center justify-center gap-2">
-              <PlusCircle className="h-4 w-4" />
-              Add Event
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add New Event</DialogTitle>
-              <DialogDescription>Please fill in the details for the new event.</DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4">
-              {/* Event Title */}
-              <div className="space-y-2">
-                <Label htmlFor="eventTitle">Event Title</Label>
-                <Input
-                  id="eventTitle"
-                  placeholder="Enter event title"
-                  value={newEventTitle}
-                  onChange={(e) => setNewEventTitle(e.target.value)}
-                />
-              </div>
-              {/* Event Date */}
-              <div className="space-y-2">
-                <Label htmlFor="eventDate">Event Date</Label>
-                <Input id="eventDate" type="date" value={newEventDate} onChange={(e) => setNewEventDate(e.target.value)} />
-              </div>
-              {/* Application Selection */}
-              <div className="space-y-2">
-                <Label htmlFor="application">Application</Label>
-                <ApplicationsCombobox
-                  onChange={(applicationId) => setSelectedApplicationId(applicationId)}
-                />
-              </div>
-            </div>
-            <DialogClose
-              onClick={addEvent}
-              className="w-full py-2 bg-primary hover:bg-[#2f6783] text-primary-foreground text-sm flex flex-row justify-center items-center mt-4 rounded"
-            >
-              <PlusCircle className="h-4 mr-2" />
-              <span>Add Event</span>
-            </DialogClose>
-          </DialogContent>
-        </Dialog>
+        <AddEvent />
       </CardFooter>
     </Card>
   );
