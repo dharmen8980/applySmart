@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import { getServerSession } from "next-auth";
 import { FetchTriggerProvider } from "./contexts/FetchTriggerProvider";
 import { ApplicationsProvider } from "./contexts/ApplicationsProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <div className="bg-[#e6e6e6]">
                 <Header session={session} />
                 <main className="max-w-[100rem] mx-auto pt-12 contai">{children}</main>
+                <Toaster />
                 <Footer />
               </div>
             </ApplicationsProvider>

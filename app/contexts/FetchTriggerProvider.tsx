@@ -8,6 +8,7 @@ interface FetchTriggerProviderProps {
 
 export const FetchTriggerProvider: React.FC<FetchTriggerProviderProps> = ({ children }) => {
   const [shouldFetch, setShouldFetch] = useState<boolean>(false);
+  const [shouldFetchEvent, setShouldFetchEvent] = useState<boolean>(false);
 
   const triggerFetch = useCallback(() => {
     setShouldFetch(true);
@@ -17,7 +18,15 @@ export const FetchTriggerProvider: React.FC<FetchTriggerProviderProps> = ({ chil
     setShouldFetch(false);
   }, []);
 
+  const triggerEventSummaryFetch = useCallback(() => {
+    setShouldFetchEvent(true);
+  }, []);
+
+  const resetEventSummaryFetch = useCallback(() => {
+    setShouldFetchEvent(false);
+  }, []);
+
   return (
-    <FetchTriggerContext.Provider value={{ shouldFetch, triggerFetch, resetFetch }}>{children}</FetchTriggerContext.Provider>
+    <FetchTriggerContext.Provider value={{ shouldFetch, shouldFetchEvent, triggerFetch, resetFetch, triggerEventSummaryFetch, resetEventSummaryFetch }}>{children}</FetchTriggerContext.Provider>
   );
 };

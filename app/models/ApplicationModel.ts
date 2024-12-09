@@ -20,11 +20,6 @@ export interface ApplicationData {
   next_event_date: string;
 }
 
-export interface ApplicationGroup {
-  status: string;
-  count: number;
-}
-
 export interface Wishlist {
   application_type: INSTITUTIONTYPE;
   institution_name: string;
@@ -38,4 +33,19 @@ export interface Event {
   application_id: number;
   event_date: Date;
   event_title: string;
+}
+
+export interface ApplicationGroup {
+  status: string;
+  count: number;
+}
+
+export interface EventSummaryStats {
+  labelCode: number
+  count: number
+}
+
+export interface EventApplicationDropdown {
+  application_id: number;
+  institution_name: string;
 }
